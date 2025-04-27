@@ -2,17 +2,17 @@ const express = require("express");
 
 const app = express();
 
-app.use("/", (req, res) => {
-    res.send("Namaste Varsha!");
+
+app.get("/user", (req,res) => {
+
+    res.send({firstName:"Varsha", lastnam: "Nagtilak"})
 })
 
-app.use("/hello", (req, res) => {
-    res.send("Hello Varsha!");
+app.post("/user", (req,res) => {
+console.log("")
+    res.send("Data save")
 })
 
-app.use("/test", (req, res) => {
-    res.send("Namaste Varsha!");
-})
 app.listen(7777, () => {
     console.log("Server is successfully listening on port 7777")
 })
