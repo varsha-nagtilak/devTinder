@@ -1,5 +1,7 @@
 const mongoose = require("mongoose");
 const validator = require("validator")
+const jwt = require('jsonwebtoken')
+const bcrypt = require("bcrypt")
 
 const userSchema = new mongoose.Schema({
 
@@ -46,7 +48,7 @@ const userSchema = new mongoose.Schema({
             }
         }
     },
-    photouUrl: {
+    photoUrl: {
         type: String,
         default: "https://www.inforwaves.com/media/2021/04/dummy-profile-pic-300x300-1.png",
         validate(value) {
@@ -64,5 +66,17 @@ const userSchema = new mongoose.Schema({
     }
 });
 
+userSchema.methods.getJwt = async function() {
+    const user = this;
+    const token = await jwt.sign({_id: user._id},process.env.JWT_SECRET, {expiresIn: "1d"})
+    return token;
+}
+
+userSchema.methods.validatePassword = async function(passwordInputByUser) {
+    const user = this;
+    const passwordHash = user.password;
+      const isPasswordValid = await bcrypt.compare(passwordInputByUser,passwordHash)
+      return isPasswordValid; 
+}
 const userModel = mongoose.model("User", userSchema)
 module.exports = userModel
